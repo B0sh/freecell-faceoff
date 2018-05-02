@@ -65,6 +65,12 @@ Game.end_game = function(data) {
     else if (data.action === "game_won")
         $('#game_won_bar').css('display', 'block');
 
+    if (data.end_type === "forfeit") {
+        $('.forfeit_text').css('display', 'block');
+    } else if (data.end_type === "played") {
+        $('.played_text').css('display', 'block');
+    }
+
     $('.' + data.game_mode + '_text').css('display', 'block');
 
     // remove the click actions
