@@ -4,7 +4,7 @@ class TimeAttack < Game
     @match = match
     if @match.game_data.present?
       @game_1 = JSON.parse(@match.game_data)
-      @game_2 = JSON.parse(@match.game_data)
+      @game_2 = JSON.parse(@match.game_data_p2)
     end
   end
 
@@ -21,15 +21,17 @@ class TimeAttack < Game
 
   def forfeit(current_user)
     if current_user.id.to_i == @match.player1.to_i
-      @match.player_winner = @match.player2
-      @match.player_loser = @match.player1
+      @match.player_winner = @match.player2.to_i
+      @match.player_loser = @match.player1.to_i
     elsif current_user.id.to_i == @match.player2.to_i
-      @match.player_winner = @match.player1
-      @match.player_loser = @match.player2
+      @match.player_winner = @match.player1.to_i
+      @match.player_loser = @match.player2.to_i
     end
 
     @match.end_type = "forfeit"
     @match.end_time = Time.current
+
+    @match.save
 
     send_info(current_user)
   end
@@ -80,6 +82,7 @@ class TimeAttack < Game
       action_1 = 'game_move'
       action_2 = 'game_move'
 
+
       if tableau_player1.has_won
         action_1 = 'game_won'
         action_2 = 'game_lost'
@@ -98,11 +101,11 @@ class TimeAttack < Game
         current_user = nil
       elsif @match.end_type == "forfeit"
         if @match.player_winner == @match.player1.to_i
-          action_1 == 'game_won'
-          action_2 == 'game_lost'
+          action_1 = 'game_won'
+          action_2 = 'game_lost'
         else
-          action_1 == 'game_lost'
-          action_2 == 'game_won'
+          action_1 = 'game_lost'
+          action_2 = 'game_won'
         end
         current_user = nil
       end
@@ -114,6 +117,7 @@ class TimeAttack < Game
                                      opponent_name: player2_name,
                                      start_time: @match.start_time.to_f,
                                      end_time: @match.end_time.to_f,
+                                     end_type: @match.end_type,
                                      player: "1",
                                      turn: "1",
                                      turn_number: @game_1['turn_number'],
@@ -127,6 +131,7 @@ class TimeAttack < Game
                                      opponent_name: player1_name,
                                      start_time: @match.start_time.to_f,
                                      end_time: @match.end_time.to_f,
+                                     end_type: @match.end_type,
                                      player: "2",
                                      turn: "2",
                                      turn_number: @game_2['turn_number'],

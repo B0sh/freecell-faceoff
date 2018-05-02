@@ -17,9 +17,12 @@ class Singleplayer < Game
 
   def forfeit(current_user)
     @match.player_winner = nil
-    @match.player_loser = @match.player1
+    @match.player_loser = @match.player1.to_i
+
     @match.end_type = "forfeit"
     @match.end_time = Time.current
+
+    @match.save
 
     send_info(current_user)
   end

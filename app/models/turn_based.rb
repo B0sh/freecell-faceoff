@@ -27,6 +27,8 @@ class TurnBased < Game
     @match.end_type = "forfeit"
     @match.end_time = Time.current
 
+    @match.save
+
     send_info(current_user)
   end
 
@@ -34,17 +36,17 @@ class TurnBased < Game
     tableau = Tableau.new(@game['tableau'])
 
     if tableau.has_won and @game['turn'] == "1"
-      @match.player_loser = @match.player1
-      @match.player_winner = @match.player2
+      @match.player_loser = @match.player1.to_i
+      @match.player_winner = @match.player2.to_i
     elsif tableau.has_won and @game['turn'] == "2"
-      @match.player_winner = @match.player1
-      @match.player_loser = @match.player2
+      @match.player_winner = @match.player1.to_i
+      @match.player_loser = @match.player2.to_i
     elsif tableau.has_lost and @game['turn'] == "1"
-      @match.player_winner = @match.player1
-      @match.player_loser = @match.player2
+      @match.player_winner = @match.player1.to_i
+      @match.player_loser = @match.player2.to_i
     elsif tableau.has_lost and @game['turn'] == "2"
-      @match.player_loser = @match.player1
-      @match.player_winner = @match.player2
+      @match.player_loser = @match.player1.to_i
+      @match.player_winner = @match.player2.to_i
     end
     @match.end_type = "played"
     @match.end_time = Time.current
@@ -79,11 +81,11 @@ class TurnBased < Game
         action_2 = 'game_won'
       elsif @match.end_type == "forfeit"
         if @match.player_winner == @match.player1.to_i
-          action_1 == 'game_won'
-          action_2 == 'game_lost'
+          action_1 = 'game_won'
+          action_2 = 'game_lost'
         else
-          action_1 == 'game_lost'
-          action_2 == 'game_won'
+          action_1 = 'game_lost'
+          action_2 = 'game_won'
         end
       end
 
@@ -98,6 +100,7 @@ class TurnBased < Game
                                    opponent_name: player2_name,
                                    start_time: @match.start_time.to_f,
                                    end_time: @match.end_time.to_f,
+                                   end_type: @match.end_type,
                                    player: "1",
                                    turn: @game['turn'],
                                    turn_number: @game['turn_number'],
@@ -109,6 +112,7 @@ class TurnBased < Game
                                    opponent_name: player1_name,
                                    start_time: @match.start_time.to_f,
                                    end_time: @match.end_time.to_f,
+                                   end_type: @match.end_type,
                                    player: "2",
                                    turn: @game['turn'],
                                    turn_number: @game['turn_number'],
