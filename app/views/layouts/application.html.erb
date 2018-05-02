@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FreeCell Battle</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+    <link rel="shortcut icon"  type="image/x-icon"  href="/images/favicon.ico">
+  </head>
+
+  <body class="<%= controller_name %> <%= action_name %>">
+
+    <div class="header">
+      <table style="width: 100%">
+        <tr>
+          <td rowspan="2" width="370x" style="text-align:left;">
+            <a href="/"><img src="/satch-banner.png" style="width:360px;"></a>
+          </td>
+          <td>
+            <% if @user.present? %>
+              Logged in as <b><%= @user.username %></b> &mdash; <%= link_to 'Logout', access_logout_path %>
+            <% else %>
+              You must login to play.
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <% if @user.blank? %>
+              <%= link_to 'Login', access_login_path %> |
+              <%= link_to 'Register', access_register_path %> |
+            <% end %>
+            <% if @current_match.present? %>
+              <%= link_to 'Return to Game', free_cell_play_path %> |
+              <%= link_to 'Forfeit Game', free_cell_cancel_path %> |
+            <% end %>
+            <%= link_to 'Help', help_path %>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="footer" style="padding: 0;"></div>
+
+    <% if flash[:notice] %>
+      <div class="notice">> <%= flash[:notice] %></div>
+    <% end %>
+
+    <div class="content">
+      <%= yield %>
+    </div>
+
+    <div id="footer">
+      &copy; <a href="https://waldens.world/">B0sh</a> 2018.&nbsp; Special thanks:
+      <%= link_to('Many', 'http://edgeguides.rubyonrails.org/getting_started.html') %>
+      <%= link_to('Ruby', 'https://blog.heroku.com/real_time_rails_implementing_websockets_in_rails_5_with_action_cable') %>
+      <%= link_to('on', 'https://www.youtube.com/watch?v=n0WUjGkDFS0') %>
+      <%= link_to('Rails', 'https://github.com/cookieshq/tic-tac-toe') %>
+      <%= link_to('tutorials', 'https://www.lynda.com/Ruby-Rails-tutorials/Ruby-Rails-5-Essential-Training/500551-2.html') %>
+    </div>
+
+  </body>
+</html>

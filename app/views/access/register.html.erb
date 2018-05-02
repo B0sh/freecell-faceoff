@@ -1,0 +1,25 @@
+<h2> Register for Freecell Faceoff </h2>
+
+<div class="register">
+  <%= form_tag(access_register_path, :method => :post) do %>
+    <table>
+      <tr>
+        <td><%= label_tag(:username) %>:</td>
+        <td><%= text_field_tag(:username, params[:username]) %></td>
+      </tr>
+      <tr>
+        <td><%= label_tag(:password) %>:</td>
+        <td><%= password_field_tag(:password) %></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><%= submit_tag("Log In") %></td>
+      </tr>
+    </table>
+  <% end %>
+</div>
+
+<div style="border:2px solid black;padding:5px;background-color:#EEc107ee;color:#111a;margin:25px;font-size:14px;">
+  <h3 style="margin: 0">Registration Tips</h3>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Don't get attached to your account; this is a just a small easily hackable web game. I doubt I'll even bother adding score tracking.<br>
+</div>

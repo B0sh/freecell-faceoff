@@ -1,0 +1,73 @@
+
+<h2> Freecell Faceoff Lobby </h2>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome to Freecell Faceoff. If you register an account, you can fight other players
+head-to-head in Freecell-based combat. I didn't say this would be fun.<br><br>
+
+<div style="width: 95%; text-align:center;">
+  <%= button_to "Play Now!", free_cell_create_path, :class => 'big_play_button', :method => :get %>
+</div><br>
+
+<table class="lobby_table" cellspacing="0">
+  <tr>
+    <th style="width: 45%;">Game Type</th>
+    <th style="width: 35%;">Name</th>
+    <th style="width: 20%;">Join</th>
+  </tr>
+
+  <% if !@matches.any? %>
+    <tr>
+      <td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;There are no pending matches.</td>
+    </tr>
+  <% else %>
+    <% @matches.each do |m| %>
+      <%
+        player1 = User.find_by_id(m.player1)
+        player2 = User.find_by_id(m.player2)
+
+        if m.game_mode == 'singleplayer'
+          game_mode = 'Single Player'
+        elsif m.game_mode == 'time-attack'
+          game_mode = 'Time Attack'
+        elsif m.game_mode == 'turn-based'
+          game_mode = 'Turn Based'
+        end
+
+        if player2.blank?
+      %>
+
+        <tr>
+          <td>&nbsp;&nbsp;Game #<%= m.id %> &mdash; <%= game_mode %></td>
+          <td><%= player1.username %></td>
+          <td><%= link_to 'Join Game', free_cell_play_path(:id => m) %></td>
+        </tr>
+
+      <% else %>
+
+
+        <tr>
+          <td>&nbsp;&nbsp;Game #<%= m.id %> &mdash; <%= game_mode %></td>
+          <td colspan="2"><%= player1.username %> vs. <%= player2.username %></td>
+        </tr>
+
+      <% end %>
+
+    <% end %>
+  <% end %>
+
+
+</table>
+
+<div style="border:2px solid black;padding:5px;background-color:#EEc107ee;color:#111a;margin:25px;font-size:14px;">
+  <h3 style="margin: 0">Nobody online?</h3>
+  &nbsp;&nbsp;&nbsp;&nbsp;Try asking if anyone is up for a game on the <%= link_to 'Walden\'s World discord channel', 'https://waldens.world/contact' %>. You might be suprised.
+</div>
+
+
+<br><br>
+
+<!--I also want to add a past matches section<br><br>-->
+
+<!--A screenshot would be good too-->
+
+

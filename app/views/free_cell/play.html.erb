@@ -1,0 +1,109 @@
+<div id="game_loading">
+  <h2>Play <s>Now</s> Soon!</h2>
+
+  Awaiting other player connection.....<br>
+  <div id="wait_timer">00.<small>0</small></div><br>
+
+  <%= link_to 'Cancel Game', free_cell_cancel_path %><br><br>
+</div>
+
+<div id="game_window">
+
+  <div id="status_bar">
+    <div style="position:relative;">
+      <span id="title"><%= @user.username %></span> <span style="float:right;"></span>
+      <span style="position: absolute; right:0;">
+        <a href="javascript:void();" onclick="App.game.send_forfeit(); return false;" style="color: #EEE; font-size: 16px; text-decoration: none">
+          <%= image_tag('flag.png', :size => '24x24', :alt => 'c lock', :class => 'flag_t') %> Resign
+        </a>
+      </span>
+    </div>
+  </div>
+
+  <div id="game_info" style="height: auto;">
+    <table style="width:95%;height:100%;padding:0; margin: 0 auto;">
+      <tr>
+        <td style="width:33%;text-align:left;font-size:14px;" valign="center">
+          Turn: <span id="turn_number">0</span><br>
+          Score: 0
+        </td>
+        <td style="width:33%;text-align:center;" valign="center">vs. <span class="opponent_name"></span></td>
+        <td style="width:33%;text-align:right;font-size:14px;" valign="center">
+          <div class="timer_area">
+          <%= image_tag('clock.png', :size => '24x24', :alt => 'c lock', :class => 'clock_t') %>
+
+          <span id="game_timer">00.<small>0</small></span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div id="game_over_bar">
+    <b>Game Over</b><br>
+
+    <div class="dotted_separator"></div>
+
+    <div class="hidden_text singleplayer_text">
+      You ran out of moves.<br><br>
+      <%= button_to "Play Again?", free_cell_create_path, :class => 'big_play_button', :method => :get %>
+    </div>
+
+    <div class="hidden_text time-attack_text">
+      <span class="opponent_name"></span> defeated you in FreeCell Faceoff.<br><br>
+      <%= button_to "Play Again?", free_cell_create_path, :class => 'big_play_button', :method => :get %>
+    </div>
+
+    <div class="hidden_text turn-based_text">
+      <span class="opponent_name"></span> defeated you in FreeCell Faceoff.<br><br>
+      <%= button_to "Play Again?", free_cell_create_path, :class => 'big_play_button', :method => :get %>
+    </div>
+  </div>
+
+  <div id="game_won_bar">
+    <b>Game Won</b><br>
+
+    <div class="dotted_separator"></div>
+
+    <div class="hidden_text singleplayer_text">
+      You achieved FreeCell!<br><br>
+      <%= button_to "Play Again?", free_cell_create_path, :class => 'big_play_button', :method => :get %>
+    </div>
+
+    <div class="hidden_text time-attack_text">
+      You defeated <span class="opponent_name"></span> in FreeCell Faceoff.<br><br>
+      <%= button_to "Play Again?", free_cell_create_path, :class => 'big_play_button', :method => :get %>
+    </div>
+
+    <div class="hidden_text turn-based_text">
+      You defeated <span class="opponent_name"></span> in FreeCell Faceoff.<br><br>
+      <%= button_to "Play Again?", free_cell_create_path, :class => 'big_play_button', :method => :get %>
+    </div>
+  </div>
+
+  <div id="disconnected_bar">
+    <b>You have been disconnected!</b>
+  </div>
+
+  <div id="table">
+    <div id="free0" class="free" location="freecell"></div>
+    <div id="free1" class="free" location="freecell"></div>
+    <div id="free2" class="free" location="freecell"></div>
+    <div id="free3" class="free" location="freecell"></div>
+
+    <div id="suit0" class="suit" location="foundation"></div>
+    <div id="suit1" class="suit" location="foundation"></div>
+    <div id="suit2" class="suit" location="foundation"></div>
+    <div id="suit3" class="suit" location="foundation"></div>
+
+    <div id="col0" class="column" location="column"></div>
+    <div id="col1" class="column" location="column"></div>
+    <div id="col2" class="column" location="column"></div>
+    <div id="col3" class="column" location="column"></div>
+    <div id="col4" class="column" location="column"></div>
+    <div id="col5" class="column" location="column"></div>
+    <div id="col6" class="column" location="column"></div>
+    <div id="col7" class="column" location="column"></div>
+  </div>
+</div>
+

@@ -1,0 +1,2 @@
+module FreeCellHelper
+end

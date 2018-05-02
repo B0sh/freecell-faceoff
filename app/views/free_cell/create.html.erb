@@ -1,0 +1,7 @@
+
+<h2>Single-player</h2>
+<%= button_to 'Play Now!', free_cell_create_path, :class => 'big_play_button', params: {'game_mode' => 'singleplayer'} %><br>
+
+<h2>Multi-player</h2>
+<%= button_to 'Time Attack', free_cell_create_path, :class => 'big_play_button', params: {'game_mode' => 'time-attack'} %><br>
+<%= button_to 'Turn Based', free_cell_create_path, :class => 'big_play_button', params: {'game_mode' => 'turn-based'} %><br>
