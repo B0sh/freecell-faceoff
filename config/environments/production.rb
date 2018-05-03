@@ -1,4 +1,8 @@
 Rails.application.configure do
+  # https://medium.com/@JeremyVe/rails-5-actioncable-and-heroku-b10880dafb58
+  config.web_socket_server_url = "wss://freecell-fuckoff.herokuapp.com/"
+  config.action_cable.allowed_request_origins = ['https://freecell-fuckoff.herokuapp.com', 'http://freecell-fuckoff.herokuapp.com']
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
@@ -88,4 +92,6 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+
 end

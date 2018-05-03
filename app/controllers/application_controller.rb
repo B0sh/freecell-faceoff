@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
     @user = User.where(:id => cookies.signed[:user_id]).first
 
     if @user.present?
-      @current_match = Match.where("end_time IS NULL and (player1 = ? OR player2 = ?)", @user.id.to_i, @user.id.to_i).first
+      @current_match = Match.where("end_time IS NULL AND (player1=? OR player2=?)", @user.id.to_i, @user.id.to_i).first
 
 
     end

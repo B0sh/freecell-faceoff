@@ -6,5 +6,4 @@ test:
 
 production:
   adapter: redis
-  url: redis://localhost:6379/1
-  channel_prefix: tic-tac-toe-demo-2_production
+  url: redis://h:peb38645372523beaf556f7a33174410143ce1b8f2a7f811658bcd322f75570cc@ec2-18-233-114-61.compute-1.amazonaws.com:6819
