@@ -132,7 +132,7 @@ Game.get_card_info = function(card_id)
         value: values[Math.floor((card_id - 1)/4)],
         suit: suits[(card_id - 1) % 4],
         color: colors[(card_id - 1) % 4],
-        image: 'http://localhost:3000/images/' + card_id + '.png'
+        image: '/images/' + card_id + '.png'
     };
 
 };
