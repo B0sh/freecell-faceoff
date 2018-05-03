@@ -15,35 +15,30 @@ ActiveRecord::Schema.define(version: 20180429000844) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "games", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "matches", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "player1"
-    t.string "player2"
+    t.integer "player1"
+    t.integer "player2"
     t.text "game_data"
     t.string "game_mode"
     t.datetime "start_time"
     t.datetime "end_time"
     t.text "game_data_p2"
     t.string "end_type"
-    t.string "player_winner"
-    t.string "player_loser"
+    t.integer "player_winner"
+    t.integer "player_loser"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "username", limit: 30
+    t.string "password_digest"
     t.boolean "in_game", default: false
     t.integer "games_lost"
     t.integer "games_won"
     t.integer "games_started"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "password_digest"
   end
 
 end

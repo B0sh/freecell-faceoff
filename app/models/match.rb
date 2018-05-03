@@ -2,7 +2,7 @@ class Match < ApplicationRecord
 
   def self.create(uuid, game_mode)
 
-    has_match = Match.where("end_time IS NULL and (player1 = ? OR player2 = ?)", uuid, uuid).first
+    has_match = Match.where("end_time IS NULL and (player1 = ? OR player2 = ?)", uuid.to_i, uuid.to_i).first
 
     if has_match.present?
       # puts "\n\n\n You have a match already \n\n\n"
@@ -13,7 +13,7 @@ class Match < ApplicationRecord
 
       match = Match.new
       match.game_mode = game_mode
-      match.player1 = uuid
+      match.player1 = uuid.to_i
       match.player2 = nil
       match.save
 
@@ -30,7 +30,7 @@ class Match < ApplicationRecord
   def self.remove(uuid)
 
     # Needs to be more robust to prevent connection loss.
-    match = Match.where("end_time IS NULL and (player1 = ? OR player2 = ?)", uuid, uuid).first
+    match = Match.where("end_time IS NULL and (player1 = ? OR player2 = ?)", uuid.to_i, uuid.to_i).first
 
     # puts uuid
     # puts match.player1
