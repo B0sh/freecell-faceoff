@@ -1,5 +1,5 @@
-class Users < ActiveRecord::Migration[5.1]
-  def up
+class CreateUsers < ActiveRecord::Migration[5.1]
+  def change
     create_table :users do |t|
       t.string "username", :limit => 30
       t.string "password"
@@ -13,9 +13,5 @@ class Users < ActiveRecord::Migration[5.1]
       t.timestamps
     end
 
-  end
-
-  def down
-    drop_table :users
   end
 end
