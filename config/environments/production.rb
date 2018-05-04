@@ -1,7 +1,13 @@
 Rails.application.configure do
   # https://medium.com/@JeremyVe/rails-5-actioncable-and-heroku-b10880dafb58
   config.web_socket_server_url = "wss://freecell-fuckoff.herokuapp.com/"
-  config.action_cable.allowed_request_origins = ['https://freecell-fuckoff.herokuapp.com', 'http://freecell-fuckoff.herokuapp.com']
+  config.action_cable.allowed_request_origins = ['https://freecell-fuckoff.herokuapp.com', 'http://freecell-fuckoff.herokuapp.com', 'https://waldens.world', 'http://waldens.world']
+
+  # https://www.codeschool.com/discuss/t/rails-api-access-control-allow-origin-error/7439/2
+  config.action_dispatch.default_headers.merge!({
+                                                    'Access-Control-Allow-Origin' => '*',
+                                                    'Access-Control-Request-Method' => '*'
+                                                })
 
   # Settings specified here will take precedence over those in config/application.rb.
 
