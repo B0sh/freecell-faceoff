@@ -6,7 +6,8 @@ Rails.application.configure do
   # https://www.codeschool.com/discuss/t/rails-api-access-control-allow-origin-error/7439/2
   config.action_dispatch.default_headers.merge!({
                                                     'Access-Control-Allow-Origin' => '*',
-                                                    'Access-Control-Request-Method' => '*'
+                                                    'Access-Control-Request-Method' => '*',
+                                                    'X-Frame-Options' => 'ALLOW-FROM https://waldens.world/'
                                                 })
 
   # Settings specified here will take precedence over those in config/application.rb.
