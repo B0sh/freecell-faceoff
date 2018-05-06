@@ -33,7 +33,6 @@ class FreeCellController < ApplicationController
   end
 
   def history
-    @matches = Match.where("end_time IS NOT NULL AND (player1=? OR player2=?)", @user.id.to_i, @user.id.to_i).order(end_time: :desc).limit(10)
 
     @totals = {}
     @totals["singleplayer_wins"] = 0
@@ -43,6 +42,8 @@ class FreeCellController < ApplicationController
     @totals["turn-based_wins"] = 0
     @totals["turn-based_losses"] = 0
 
+    @matches = Match.where("end_time IS NOT NULL AND (player1=? OR player2=?)", @user.id.to_i, @user.id.to_i).order(end_time: :desc)
+
     @matches.each do |m|
       if m.player_winner == @user.id
         @totals[m.game_mode + "_wins"] += 1
@@ -50,6 +51,8 @@ class FreeCellController < ApplicationController
         @totals[m.game_mode + "_losses"] += 1
       end
     end
+
+    @matches = Match.where("end_time IS NOT NULL AND (player1=? OR player2=?)", @user.id.to_i, @user.id.to_i).order(end_time: :desc).limit(10)
   end
 
   def cancel
