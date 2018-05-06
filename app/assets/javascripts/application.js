@@ -15,7 +15,6 @@
 //= require jquery-ui
 //= require cable
 
-//= require loopify
 //= require timer
 //= require init
 //= require freecell

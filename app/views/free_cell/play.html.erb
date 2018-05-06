@@ -1,3 +1,9 @@
+<script>
+  Howler.volume(
+      <%= @user.volume %> / 100
+  )
+</script>
+
 <div id="game_loading">
   <h2>Play <s>Now</s> Soon!</h2>
 
@@ -11,9 +17,24 @@
 
   <div id="status_bar">
     <div style="position:relative;">
+      <span style="position: absolute;  left: 5px;" id="button_sound_on">
+        <a href="javascript:void(0)" onclick="App.game.enable_sound(); return false;" style="color: #EEE; font-size: 16px; text-decoration: none">
+          <%= image_tag('mute.png', :size => '22x22', :alt => 'audio', :class => 'flag_t') %> Music
+        </a>
+      </span>
+
+      <span style="position: absolute; display: none; left: 5px;" id="button_sound_off">
+        <a href="javascript:void(0)" onclick="App.game.disable_sound(); return false;" style="color: #EEE; font-size: 16px; text-decoration: none">
+          <%= image_tag('audio.png', :size => '22x22', :alt => 'audio', :class => 'flag_t') %> Music
+        </a>
+      </span>
+
+
       <span id="title"><%= @user.username %></span> <span style="float:right;"></span>
+
+
       <span style="position: absolute; right:0;">
-        <a href="javascript:void();" onclick="App.game.send_forfeit(); return false;" style="color: #EEE; font-size: 16px; text-decoration: none">
+        <a href="javascript:void(0)" onclick="App.game.send_forfeit(); return false;" style="color: #EEE; font-size: 16px; text-decoration: none">
           <%= image_tag('flag.png', :size => '24x24', :alt => 'c lock', :class => 'flag_t') %> Resign
         </a>
       </span>

@@ -3,6 +3,16 @@ class AccessController < ApplicationController
   before_action :confirm_logged_in, :except => [:login, :register, :attempt_login, :logout]
 
 
+  def options
+    # if you submitted the options form
+    if params[:options].present?
+      volume = params[:options][:volume]
+      @user.volume = volume
+      @user.save
+      flash.now[:notice] = "Your settings have been adjusted to your specifications, good sir."
+    end
+  end
+
   def login
     # display login form
   end

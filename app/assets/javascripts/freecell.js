@@ -56,7 +56,6 @@ Game.init = function (data) {
     if (Game.is_your_turn)
       Game.render_actions();
 
-    Game.music();
 };
 
 Game.end_game = function(data) {
@@ -82,18 +81,17 @@ Game.end_game = function(data) {
 
 
 Game.music_active = false;
-Game.music = function() {
-    if (!Game.music_active) {
-        Game.music_active = true;
-        loopify("/ff.wav", function (err, loop) {
-            if (err) {
-                Game.music_active = false;
-                console.warn(err);
-            }
+Game.loop = new Howl({
+    src: ['/ff.wav'],
+    loop: true
+})
 
-            // loop.play();
-        });
-    }
+Game.start_music = function() {
+    Game.loop.play();
+};
+
+Game.stop_music = function() {
+    Game.loop.stop();
 };
 
 
@@ -115,7 +113,6 @@ Game.set_title = function(data) {
 
 Game.get_card_info = function(card_id)
 {
-
     if (card_id === null)
         return null;
 

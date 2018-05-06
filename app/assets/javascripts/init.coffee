@@ -40,6 +40,8 @@ App.init = ->
 
             Timer.stop();
 
+            App.game.enable_sound()
+
             console.log "start"
 
           Game.init(data)
@@ -56,6 +58,17 @@ App.init = ->
 
     send_forfeit: () ->
       @perform "forfeit", im: 'done'
+
+    enable_sound: () ->
+      $('#button_sound_off').css('display', 'block');
+      $('#button_sound_on').css('display', 'none');
+      Game.start_music();
+
+    disable_sound: () ->
+      $('#button_sound_on').css('display', 'block');
+      $('#button_sound_off').css('display', 'none');
+      Game.stop_music();
+
 
 
 $(document).ready ->

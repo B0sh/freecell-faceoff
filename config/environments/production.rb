@@ -5,10 +5,10 @@ Rails.application.configure do
 
   # https://www.codeschool.com/discuss/t/rails-api-access-control-allow-origin-error/7439/2
   config.action_dispatch.default_headers.merge!({
-                                                    'Access-Control-Allow-Origin' => '*',
-                                                    'Access-Control-Request-Method' => '*',
-                                                    'X-Frame-Options' => 'ALLOW-FROM https://waldens.world/'
-                                                })
+    'Access-Control-Allow-Origin' => '*',
+    'Access-Control-Request-Method' => '*',
+    'X-Frame-Options' => 'ALLOW-FROM https://waldens.world/'
+  })
 
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -27,7 +27,7 @@ Rails.application.configure do
 
   # Attempt to read encrypted secrets from `config/secrets.yml.enc`.
   # Requires an encryption key in `ENV["RAILS_MASTER_KEY"]` or
-  # `config/secrets.yml.key`.
+  # config/secrets.yml.key`.
   config.read_encrypted_secrets = true
 
   # Disable serving static files from the `/public` folder by default since

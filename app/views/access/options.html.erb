@@ -1,0 +1,8 @@
+<h2> Game Settings </h2>
+
+<%= form_tag(access_options_path, :method => :post) do %>
+  <b>Music Volume:</b><br>
+  <%= range_field(:options, :volume, :in => 0..100, :step => 5, :value => @user.volume) %><br><br>
+
+  <%= submit_tag("Change") %>
+<% end %>

@@ -30,11 +30,16 @@
             <% if @user.blank? %>
               <%= link_to 'Login', access_login_path %> |
               <%= link_to 'Register', access_register_path %> |
+            <% else %>
+              <%= link_to 'Match History', free_cell_play_path %> |
+              <%= link_to 'Leaderboards', free_cell_play_path %><br>
             <% end %>
+
             <% if @current_match.present? %>
               <%= link_to 'Return to Game', free_cell_play_path %> |
-              <%= link_to 'Forfeit Game', free_cell_cancel_path %> |
             <% end %>
+
+            <%= link_to 'Options', access_options_path %> |
             <%= link_to 'Help', help_path %>
           </td>
         </tr>

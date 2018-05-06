@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   post 'free_cell/create'
   get 'free_cell/cancel'
 
+  get 'access/options'
+  post 'access/options'
+
   get 'access/register'
   post 'access/register'
   get 'access/menu'
