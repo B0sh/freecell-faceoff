@@ -1,0 +1,108 @@
+<h2>Match History</h2>
+
+<table class="lobby_table" cellspacing="0" style="width: 50%;">
+  <tr>
+    <th style="width: 50%;">Game Type</th>
+    <th style="width: 50%;">Win / Loss Ratio</th>
+  </tr>
+
+  <tr>
+    <td>&nbsp;&nbsp;<b>Single-player</b></td>
+    <td>
+      <%= @totals["singleplayer_wins"] %> / <%= @totals["singleplayer_losses"] %>
+      <% if @totals["singleplayer_wins"] + @totals["singleplayer_losses"] > 0 %>
+        (<%= 100 * (@totals["singleplayer_wins"]/(@totals["singleplayer_wins"] + @totals["singleplayer_losses"])) %>%)
+      <% else %>
+        (0%)
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
+    <td>&nbsp;&nbsp;<b>Time Attack</b></td>
+    <td>
+      <%= @totals["time-attack_wins"] %> / <%= @totals["time-attack_losses"] %>
+      <% if @totals["time-attack_wins"] + @totals["time-attack_losses"] > 0 %>
+        (<%= 100 * (@totals["time-attack_wins"]/(@totals["time-attack_wins"] + @totals["time-attack_losses"])) %>%)
+      <% else %>
+        (0%)
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
+    <td>&nbsp;&nbsp;<b>Turn Based</b></td>
+    <td>
+      <%= @totals["turn-based_wins"] %> / <%= @totals["turn-based_losses"] %>
+      <% if @totals["turn-based_wins"] + @totals["turn-based_losses"] > 0 %>
+        (<%= 100 * (@totals["turn-based_wins"]/(@totals["turn-based_wins"] + @totals["turn-based_losses"])) %>%)
+      <% else %>
+        (0%)
+      <% end %>
+    </td>
+  </tr>
+</table><br>
+
+<table class="lobby_table" cellspacing="0" style="width: 650px">
+  <tr>
+    <th style="width: 50%;">Game Type</th>
+    <th style="width: 25%;">Info</th>
+    <th style="width: 25%;">Results</th>
+  </tr>
+
+  <% if !@matches.any? %>
+    <tr>
+      <td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;There are no pending matches.</td>
+    </tr>
+  <% else %>
+    <% @matches.each do |m| %>
+      <%
+        # "player1" is always you for display
+        if m.player1 == @user.id
+          player1 = User.find_by_id(m.player1)
+          player2 = User.find_by_id(m.player2)
+        else
+          player2 = User.find_by_id(m.player1)
+          player1 = User.find_by_id(m.player2)
+        end
+        game_data = JSON.parse(m.game_data)
+      %><tr>
+        <td>
+        &nbsp;&nbsp;Game #<%= m.id %> &mdash; Single-player<br>
+          <% if m.game_mode == 'singleplayer' %>
+            <!-- &nbsp;&nbsp;&nbsp;&nbsp;<%#= player1.username %><br>-->
+          <% elsif m.game_mode == 'time-attack' %>
+             &nbsp;&nbsp;&nbsp;&nbsp;vs. <%= player2.username %><br>
+          <% elsif m.game_mode == 'turn-based' %>
+             &nbsp;&nbsp;&nbsp;&nbsp;vs. <%= player2.username %><br>
+          <% end %>
+        &nbsp;&nbsp;&nbsp;&nbsp;<%= m.end_time.in_time_zone("Central Time (US & Canada)").strftime("%-m/%-e/%y  %l:%M%P") %>
+        </td>
+        <td>
+          Turns: <%= game_data["turn_number"] %><br>
+          Score: 0
+        </td>
+        <td>
+          <% if m.player_winner == @user.id %>
+            <% if m.end_type == 'forfeit' %>
+              <b>Won</b> &mdash; Resigned
+            <% elsif m.end_type == 'player' %>
+              <b>Won</b>
+            <% end %>
+          <% else %>
+            <% if m.end_type == 'forfeit' %>
+              <b>Lost</b> &mdash; Resigned
+            <% elsif m.end_type == 'player' %>
+              <b>Lost</b> &mdash; Game Over
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+
+    <% end %>
+  <% end %>
+
+</table><br>
+
+<div style="width:100%; text-align:center;">
+<i>Only shows your last 10 matches.</i></div><br>

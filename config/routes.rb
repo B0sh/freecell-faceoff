@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get 'free_cell/create'
   post 'free_cell/create'
   get 'free_cell/cancel'
+  get 'free_cell/history'
 
   get 'access/options'
   post 'access/options'
