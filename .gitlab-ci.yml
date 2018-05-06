@@ -7,6 +7,6 @@ production:
   stage: deploy
   script:
   - gem install dpl
-  - dpl --provider=heroku --app=gitlab-ci-ruby-test-prod --api-key=$HEROKU_PRODUCTION_KEY
+  - dpl --provider=heroku --app=freecell-faceoff --api-key=$HEROKU_PRODUCTION_KEY
   only:
   - tags
