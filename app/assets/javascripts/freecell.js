@@ -235,7 +235,7 @@ Game.get_valid_moves = function (card)
 Game.is_valid_move = function(moving_card, to_card) {
     var valid_moves = Game.get_valid_moves(moving_card);
 
-    console.log(valid_moves, moving_card, to_card);
+    // console.log(valid_moves, moving_card, to_card);
 
     // loop through moves possibilities
     for (var i  = 0; i < valid_moves.length; i++)
@@ -396,46 +396,55 @@ Game.render_actions = function() {
         }
     }
 
-    // make foundations clickable, if they are empty
+    // make foundations clickable
     for (var i = 0; i < 4; i++)
     {
-        //if (Game.tableau.freecells[i] === null) {
-            $('#suit' + i).on('click', Game.left_click_action);
-        //} else {
-        //}
+        $('#suit' + i).on('click', Game.left_click_action);
     }
 
 };
 
-// Game.double_click_action = function(event) {
-//     console.log('double click action');
-//
-//     var card = Game.get_card_info(parseInt(this.id));
-//     var moves = Game.get_valid_moves(card);
-//
-//     var move = null;
-//     for (var i = 0; i < moves.length; i++)
-//     {
-//         if (moves[i].location == 'foundation')
-//         {
-//             break;
-//         }
-//
-//     }
-//
-//     // no double click moves found
-//     if (move === null)
-//         return;
-// };
+Game.double_click_action = function(event) {
+    // console.log('double click action');
+
+    var card = Game.get_card_info(parseInt(this.id));
+    var moves = Game.get_valid_moves(card);
+
+    var move = null;
+    for (var i = 0; i < moves.length; i++)
+    {
+        if (moves[i].location === 'foundation')
+        {
+            Game.move_cards(card, 'suit' + moves[i].id);
+            return true;
+        }
+
+    }
+
+    for (var i = 0; i < moves.length; i++)
+    {
+        if (moves[i].location === 'freecell')
+        {
+            Game.move_cards(card, 'free' + moves[i].id);
+            return true;
+        }
+
+    }
+
+    // no double click moves found
+    if (move === null)
+        return false;
+};
 
 Game.right_click_action = function(event) {
-    console.log('right click action');
+    // console.log('right click action');
 
 };
 
 Game.left_click_buffer = null;
 Game.left_click_action = function(event) {
-    console.log('left click action', this.getAttribute('location'), this.id, Game.left_click_buffer);
+    // console.log('left click action', this.getAttribute('location'), this.id, Game.left_click_buffer);
+
     var location = this.getAttribute('location');
 
     if (location === 'card') {
