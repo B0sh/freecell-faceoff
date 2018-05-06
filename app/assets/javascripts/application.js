@@ -15,6 +15,7 @@
 //= require jquery-ui
 //= require cable
 
+//= require howler
 //= require timer
 //= require init
 //= require freecell
