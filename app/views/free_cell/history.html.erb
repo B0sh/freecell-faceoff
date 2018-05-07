@@ -11,7 +11,7 @@
     <td>
       <%= @totals["singleplayer_wins"] %> / <%= @totals["singleplayer_losses"] %>
       <% if @totals["singleplayer_wins"] + @totals["singleplayer_losses"] > 0 %>
-        (<%= 100 * (@totals["singleplayer_wins"]/(@totals["singleplayer_wins"] + @totals["singleplayer_losses"])) %>%)
+        (<%= (100 * (@totals["singleplayer_wins"].to_f/(@totals["singleplayer_wins"] + @totals["singleplayer_losses"]))).to_int %>%)
       <% else %>
         (0%)
       <% end %>
@@ -23,7 +23,7 @@
     <td>
       <%= @totals["time-attack_wins"] %> / <%= @totals["time-attack_losses"] %>
       <% if @totals["time-attack_wins"] + @totals["time-attack_losses"] > 0 %>
-        (<%= 100 * (@totals["time-attack_wins"]/(@totals["time-attack_wins"] + @totals["time-attack_losses"])) %>%)
+        (<%= (100 * (@totals["time-attack_wins"].to_f/(@totals["time-attack_wins"] + @totals["time-attack_losses"]))).to_int %>%)
       <% else %>
         (0%)
       <% end %>
@@ -35,7 +35,7 @@
     <td>
       <%= @totals["turn-based_wins"] %> / <%= @totals["turn-based_losses"] %>
       <% if @totals["turn-based_wins"] + @totals["turn-based_losses"] > 0 %>
-        (<%= 100 * (@totals["turn-based_wins"]/(@totals["turn-based_wins"] + @totals["turn-based_losses"])) %>%)
+        (<%= (100 * (@totals["turn-based_wins"].to_f/(@totals["turn-based_wins"] + @totals["turn-based_losses"]))).to_int %>%)
       <% else %>
         (0%)
       <% end %>
