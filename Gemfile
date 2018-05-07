@@ -1,4 +1,8 @@
 source 'https://rubygems.org'
+ruby "2.4.4"
+
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '~> 5.1.5'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
@@ -14,15 +18,11 @@ end
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.5'
-
 # BAD FOR HEROKU >,<
 # https://devcenter.heroku.com/articles/sqlite3
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 gem 'pg'
-
 
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
