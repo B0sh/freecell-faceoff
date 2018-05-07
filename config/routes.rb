@@ -22,7 +22,7 @@ Rails.application.routes.draw do
 
 
   get '/purge', to: 'welcome#purge'
-  get '/help', to: 'welcome#help'
+  get '/help', to: 'free_cell#help'
 
   mount ActionCable.server => "/cable"
 end
