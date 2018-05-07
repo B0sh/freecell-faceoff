@@ -68,7 +68,15 @@
         game_data = JSON.parse(m.game_data)
       %><tr>
         <td>
-        &nbsp;&nbsp;Game #<%= m.id %> &mdash; Single-player<br>
+        &nbsp;&nbsp;Game #<%= m.id %> &mdash;
+          <% if m.game_mode == 'singleplayer' %>
+            Single-player
+          <% elsif m.game_mode == 'time-attack' %>
+            Time Attack
+          <% elsif m.game_mode == 'turn-based' %>
+            Turn Attack
+          <% end %><br>
+
           <% if m.game_mode == 'singleplayer' %>
             <!-- &nbsp;&nbsp;&nbsp;&nbsp;<%#= player1.username %><br>-->
           <% elsif m.game_mode == 'time-attack' %>
