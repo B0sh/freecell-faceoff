@@ -66,6 +66,17 @@
           player1 = User.find_by_id(m.player2)
         end
         game_data = JSON.parse(m.game_data)
+
+        time_string = (m.end_time.to_f - m.start_time.to_f)
+
+        if time_string > 3600
+          time_string = "a while"
+        else
+          time_string = (time_string / 60).floor.to_s.rjust(2, "0") + ":" +
+            (time_string % 60).floor.to_s.rjust(2, "0") + "." +
+            ((time_string * 10) % 10).floor.to_s
+        end
+
       %><tr>
         <td>
         &nbsp;&nbsp;Game #<%= m.id %> &mdash;
@@ -94,13 +105,13 @@
           <% if m.player_winner == @user.id %>
             <% if m.end_type == 'forfeit' %>
               <b>Won</b> &mdash; Resigned
-            <% elsif m.end_type == 'player' %>
-              <b>Won</b>
+            <% elsif m.end_type == 'played' %>
+              <b>Won</b> in <%= time_string %>
             <% end %>
           <% else %>
             <% if m.end_type == 'forfeit' %>
               <b>Lost</b> &mdash; Resigned
-            <% elsif m.end_type == 'player' %>
+            <% elsif m.end_type == 'played' %>
               <b>Lost</b> &mdash; Game Over
             <% end %>
           <% end %>
