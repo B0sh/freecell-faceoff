@@ -121,6 +121,10 @@ Game.get_card_info = function(card_id)
     var suits = ['clubs', 'spades', 'hearts', 'diamonds'];
     var colors = ['black', 'black', 'red', 'red'];
 
+    if (skin == 'golden')
+        var image = '/images/golden/' + card_id + '.png';
+    else
+        var image = '/images/' + card_id + '.png';
 
     return {
         id: card_id,
@@ -129,7 +133,7 @@ Game.get_card_info = function(card_id)
         value: values[Math.floor((card_id - 1)/4)],
         suit: suits[(card_id - 1) % 4],
         color: colors[(card_id - 1) % 4],
-        image: '/images/' + card_id + '.png'
+        image: image
     };
 
 };

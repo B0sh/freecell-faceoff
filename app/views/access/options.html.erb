@@ -4,5 +4,32 @@
   <b>Music Volume:</b><br>
   <%= range_field(:options, :volume, :in => 0..100, :step => 5, :value => @user.volume) %><br><br>
 
+  <b>Skin:</b>
+  <table style="margin:0;text-align:center;">
+    <tr>
+      <td style="width:120px;">
+        <img src="/images/1.png">
+      </td>
+      <td style="width:120px;">
+        <img src="/images/golden/1.png">
+      </td>
+    </tr>
+    <tr>
+      <td style="width:120px;">
+        <%= radio_button_tag 'options[skin]', 'normal', @user.card_skin == 'normal' %>
+      </td>
+      <td style="width:120px;">
+        <% if @totals["singleplayer_wins"] >= @unlock_golden_wins %>
+          <%= radio_button_tag 'options[skin]', 'golden', @user.card_skin == 'golden' %>
+        <% else %>
+          <small><i>Unlock at <b>10</b> Singleplayer wins</i></small>
+        <% end %>
+      </td>
+    </tr>
+  </table><br>
+
   <%= submit_tag("Change") %>
+
 <% end %>
+
+

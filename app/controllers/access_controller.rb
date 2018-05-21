@@ -4,10 +4,37 @@ class AccessController < ApplicationController
 
 
   def options
+    @unlock_golden_wins = 1
+
+    @totals = {}
+    @totals["singleplayer_wins"] = 0
+    @totals["singleplayer_losses"] = 0
+    @totals["time-attack_wins"] = 0
+    @totals["time-attack_losses"] = 0
+    @totals["turn-based_wins"] = 0
+    @totals["turn-based_losses"] = 0
+
+    @matches = Match.where("end_time IS NOT NULL AND (player1=? OR player2=?)", @user.id.to_i, @user.id.to_i).order(end_time: :desc)
+
+    @matches.each do |m|
+      if m.player_winner == @user.id
+        @totals[m.game_mode + "_wins"] += 1
+      else
+        @totals[m.game_mode + "_losses"] += 1
+      end
+    end
+
     # if you submitted the options form
     if params[:options].present?
       volume = params[:options][:volume]
+      skin = params[:options][:skin]
+
+      if skin == "golden" and @totals["singleplayer_wins"] < @unlock_golden_wins
+        skin = "normal"
+      end
+
       @user.volume = volume
+      @user.card_skin = skin
       @user.save
       flash.now[:notice] = "Your settings have been adjusted to your specifications, good sir."
     end
