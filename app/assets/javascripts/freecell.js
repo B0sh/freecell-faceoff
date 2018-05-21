@@ -14,6 +14,9 @@ String.prototype.ucfirst = function() {
 // initalize game
 var Game = {};
 
+// true when the move is being sent, and no new moves can be performed
+Game.sending_move = false;
+
 // ie board
 Game.tableau = {
     // the wild spaces
@@ -409,6 +412,12 @@ Game.render_actions = function() {
 };
 
 Game.double_click_action = function(event) {
+    if (Game.sending_move)
+    {
+        console.log("Clicked too fast, move not processed");
+        return false;
+    }
+
     // console.log('double click action');
 
     var card = Game.get_card_info(parseInt(this.id));
@@ -447,6 +456,12 @@ Game.right_click_action = function(event) {
 
 Game.left_click_buffer = null;
 Game.left_click_action = function(event) {
+    if (Game.sending_move)
+    {
+        console.log("Clicked too fast, move not processed");
+        return false;
+    }
+
     // console.log('left click action', this.getAttribute('location'), this.id, Game.left_click_buffer);
 
     var location = this.getAttribute('location');

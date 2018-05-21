@@ -44,6 +44,7 @@ App.init = ->
 
             console.log "start"
 
+          Game.sending_move = false
           Game.init(data)
 
         when "game_lost"
@@ -54,6 +55,7 @@ App.init = ->
           alert("Game Won")
 
     send_move: (tableau) ->
+      Game.sending_move = true
       @perform "move", tableau: tableau
 
     send_forfeit: () ->
