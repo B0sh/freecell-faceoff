@@ -62,13 +62,13 @@ class Singleplayer < Game
   end
 
   def move(data)
-    @game['turn_number'] = @game['turn_number'] + 1
-    @game['tableau'] = data['tableau']
-
     # set the start time as the first move is made
     if @game['turn_number'] == 0 and @match.start_time.blank?
       @match.start_time = Time.current
     end
+
+    @game['turn_number'] = @game['turn_number'] + 1
+    @game['tableau'] = data['tableau']
 
     @match.game_data = @game.to_json
 
