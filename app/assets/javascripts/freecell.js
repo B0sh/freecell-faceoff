@@ -418,6 +418,9 @@ Game.double_click_action = function(event) {
         return false;
     }
 
+    // remove the left click buffer for double clicks to prevent double moves
+    Game.left_click_buffer = null;
+
     // console.log('double click action');
 
     var card = Game.get_card_info(parseInt(this.id));
