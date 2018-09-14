@@ -23,11 +23,6 @@ Things you may want to cover:
 
 * ...
 
+# REDIS Part
 
-
-
-
-
-Some things to look at for the future:
-* a no script wtf you doin tag
-* 
+Using heroku's redis free tier forces expires :(, so the new solution is to use Redis Labs (https://redislabs.com) until that dissappears too. I don't think it would be that hard to run a redis server at Walden's World if it came down to that but reliability for freecell face off is definetly not a priority.
