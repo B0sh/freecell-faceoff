@@ -6,4 +6,5 @@ test:
 
 production:
   adapter: redis
-  url: redis://h:2DT96aSWW3XIkeHelqkA6vHMAZEvxCwG@redis-13121.c17.us-east-1-4.ec2.cloud.redislabs.com:13121
+  url: redis://h:CPynd3KbQiLaCjMlTBMjG7sj3JUOqbBy@redis-14998.c9.us-east-1-4.ec2.cloud.redislabs.com:14998
+
