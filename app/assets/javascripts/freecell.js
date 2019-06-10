@@ -367,6 +367,7 @@ Game.render_actions = function() {
 
         $('[location=card]#' + card.id)
             .on('click', Game.left_click_action)
+            .on('contextmenu', Game.double_click_action)
             .on('dblclick', Game.double_click_action)
             .hover(
                 function () {
@@ -454,6 +455,9 @@ Game.double_click_action = function(event) {
 
 Game.right_click_action = function(event) {
     // console.log('right click action');
+    Game.double_click_action(event);
+    
+    event.preventDefault();
 
 };
 
