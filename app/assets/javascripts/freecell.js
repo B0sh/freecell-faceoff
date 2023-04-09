@@ -106,9 +106,6 @@ Game.set_title = function(data) {
         case 'time-attack':
             $('#title').html('Time Attack Faceoff');
             break;
-        case 'turn-based':
-            $('#title').html('Turn Based Faceoff');
-            break;
     }
 };
 

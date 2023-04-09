@@ -78,13 +78,6 @@
 
       <%= button_to "Play Again?", free_cell_create_path, :class => 'big_play_button', :method => :get %>
     </div>
-
-    <div class="hidden_text turn-based_text">
-      <span class="hidden_text forfeit_text">You resigned to <span class="opponent_name"></span> in FreeCell Faceoff.</span>
-      <span class="hidden_text played_text"><span class="opponent_name"></span> defeated you in FreeCell Faceoff.</span><br>
-
-      <%= button_to "Play Again?", free_cell_create_path, :class => 'big_play_button', :method => :get %>
-    </div>
   </div>
 
   <div id="game_won_bar">
@@ -98,13 +91,6 @@
     </div>
 
     <div class="hidden_text time-attack_text">
-      <span class="hidden_text forfeit_text"><span class="opponent_name"></span> resigned to you in FreeCell Faceoff.</span>
-      <span class="hidden_text played_text">You defeated <span class="opponent_name"></span> in FreeCell Faceoff.</span><br>
-
-      <%= button_to "Play Again?", free_cell_create_path, :class => 'big_play_button', :method => :get %>
-    </div>
-
-    <div class="hidden_text turn-based_text">
       <span class="hidden_text forfeit_text"><span class="opponent_name"></span> resigned to you in FreeCell Faceoff.</span>
       <span class="hidden_text played_text">You defeated <span class="opponent_name"></span> in FreeCell Faceoff.</span><br>
 

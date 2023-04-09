@@ -16,8 +16,6 @@ class GameChannel < ApplicationCable::Channel
         game = Singleplayer.new(match)
       elsif match.game_mode == 'time-attack'
         game = TimeAttack.new(match)
-      elsif match.game_mode == 'turn-based'
-        game = TurnBased.new(match)
       end
 
       game.setup()
@@ -41,8 +39,6 @@ class GameChannel < ApplicationCable::Channel
       game = Singleplayer.new(match)
     elsif match.game_mode == 'time-attack'
       game = TimeAttack.new(match)
-    elsif match.game_mode == 'turn-based'
-      game = TurnBased.new(match)
     end
 
     if game.can_move
@@ -62,8 +58,6 @@ class GameChannel < ApplicationCable::Channel
       game = Singleplayer.new(match)
     elsif match.game_mode == 'time-attack'
       game = TimeAttack.new(match)
-    elsif match.game_mode == 'turn-based'
-      game = TurnBased.new(match)
     end
 
     if game.can_move

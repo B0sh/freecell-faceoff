@@ -172,11 +172,6 @@ table {
     filter: invert(0.9);
 }
 
-#turn_based {
-    display:none;
-}
-
-
 
 #footer {
     text-align:center;

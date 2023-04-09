@@ -39,8 +39,6 @@ class FreeCellController < ApplicationController
     @totals["singleplayer_losses"] = 0
     @totals["time-attack_wins"] = 0
     @totals["time-attack_losses"] = 0
-    @totals["turn-based_wins"] = 0
-    @totals["turn-based_losses"] = 0
 
     @matches = Match.where("end_time IS NOT NULL AND (player1=? OR player2=?)", @user.id.to_i, @user.id.to_i).order(end_time: :desc)
 
