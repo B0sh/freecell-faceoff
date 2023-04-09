@@ -93,4 +93,5 @@ fabric.properties
 
 
 # End of https://www.gitignore.io/api/rubymine
-app/views/free_cell/help.html.erb
+
+.env
