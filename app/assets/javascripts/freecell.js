@@ -2,7 +2,6 @@ String.prototype.ucfirst = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
-
 /*
  instead of doing all that class prototype shit we need a way to sync data between client and server
  javascript objects won't work for that case
@@ -13,6 +12,9 @@ String.prototype.ucfirst = function() {
 
 // initalize game
 var Game = {};
+
+// queue up moves here to be sent to the server
+Game.move_queue = [];
 
 // true when the move is being sent, and no new moves can be performed
 Game.sending_move = false;
@@ -27,8 +29,9 @@ Game.tableau = {
     stock: [[], [], [], [], [], [], [], []]
 };
 
-
 Game.init = function (data) {
+    console.log("INIT")
+
     Game.tableau = data.tableau;
     Game.player = data.player;
 
@@ -56,20 +59,232 @@ Game.init = function (data) {
     if (data.start_time !== 0)
         Timer.start($('#game_timer'), data.start_time);
 
-    if (Game.is_your_turn)
-      Game.render_actions();
+    Game.initMouseEvents();
+
+    Game.dragging = false;
+    Game.autoStacking = false;
 
 };
 
+Game.initMouseEvents = function () {
+    if (!Game.initializedMouseEvents) {
+        document.querySelector('#table').addEventListener("mousedown", Game.mousedown.bind(Game));
+        document.querySelector('#table').addEventListener("contextmenu", Game.contextmenu.bind(Game));
+        document.querySelector('#table').addEventListener("dblclick", Game.contextmenu.bind(Game));
+
+        document.addEventListener("mouseup", Game.mouseup.bind(Game));
+        document.addEventListener("dragstart", Game.dragstart.bind(Game));		
+        document.addEventListener("dragenter", Game.dragenter.bind(Game));
+        document.addEventListener("dragover", Game.dragover.bind(Game));
+        document.addEventListener("dragend", Game.dragend.bind(Game));
+        Game.initializedMouseEvents = true;
+    }
+};
+
+    Game.contextmenu = function(e) {
+
+        e.preventDefault();
+        // if (Game.sending_move)
+        // {
+        //     alert("Clicked too fast, move not processed");
+        //     return false;
+        // }
+
+		const targetCard = e.target.closest(".card");
+
+		if (targetCard && targetCard.id) {
+            var card = Game.get_card_info(parseInt(targetCard.id));
+            var moves = Game.get_valid_moves(card);
+
+            for (var i = 0; i < moves.length; i++)
+            {
+                if (moves[i].location === 'foundation')
+                {
+                    Game.move_cards(card, 'suit' + moves[i].id);
+                    return true;
+                }
+
+            }
+
+            for (var i = 0; i < moves.length; i++)
+            {
+                if (moves[i].location === 'freecell')
+                {
+                    Game.move_cards(card, 'free' + moves[i].id);
+                    return true;
+                }
+
+            }
+        }
+    }
+ 
+	Game.mousedown = function(e) {
+        // console.log("mousedown", e);
+		
+		const targetCard = e.target.closest(".card");
+		
+		if (targetCard && targetCard.id) {
+            const movableCards = Game.get_movable_cards();
+            const cardId = parseInt(targetCard.id);
+			var card = Game.get_card_info(cardId);
+
+            if (movableCards.find((x) => x.id == card.id)) {
+                card.checked = false;
+
+                card.origin = {
+                    x: e.pageX,
+                    y: e.pageY,
+                };
+
+                card.el.classList.add("dragging");
+
+                Game.activeCard = card;
+            }
+            else {
+                e.preventDefault();
+                console.log("CANNOT MOVE")
+            }
+		}			
+	};
+
+	Game.dragstart = function(e) {
+        // console.log("dragstart", e);
+
+        if (Game.activeCard) {
+            e.dataTransfer.effectAllowed = 'copy';
+            e.dataTransfer.setData('text/html', '');
+
+            // Create blank image to hide the ghost
+            var dragIcon = document.createElement('img');
+            e.dataTransfer.setDragImage(dragIcon, -10, -10);	
+
+            Game.dragging = true;
+        }
+	};
+
+	
+	Game.dragenter = function(e) {
+        // console.log("dragenter", e.target);
+
+		var t = e.target;
+
+		if (Game.activeColumn) {
+			Game.activeColumn.classList.remove("over");
+		}
+
+        Game.dragenterELEM = null;
+		if (t.classList.contains("column") || t.classList.contains("suit") || t.classList.contains("free") || t.classList.contains("card")) {
+			if (t.classList.contains('card')) {
+				Game.activeColumn = t.parentNode;
+			}
+            else {
+				Game.activeColumn = t;
+			}
+
+			Game.activeColumn.classList.add("over");
+
+		}
+
+            Game.dragenterELEM = e.target;
+	};
+
+	Game.dragover = function(e) {
+        // console.log("dragover", e);
+
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'over';
+
+		// Physically drag the card instead of using the D&D ghost
+		if (Game.activeCard && Game.dragging) {
+			var c = Game.activeCard;
+			var x = e.pageX - c.origin.x;
+			var y = e.pageY - c.origin.y;
+
+			Game.activeCard.el.style.setProperty('transform', "rotateX(0deg) translate3d("+x+"px, "+y+"px, 0px)");
+			Game.activeCard.el.style.setProperty('pointer-events','none');
+		}			
+	};
+
+	Game.dragend = function(e) {
+        // console.log("dragend", e);
+
+		if (Game.activeCard && Game.dragging && Game.dragenterELEM) {
+
+			var c = Game.activeCard;
+			c.el.classList.remove("dragging");
+			c.el.style.setProperty('transform', '');
+			c.el.style.setProperty('pointer-events', '');
+
+			if (Game.activeColumn) {
+				Game.activeColumn.classList.remove("over");
+			}			
+
+            let location = Game.dragenterELEM.getAttribute('location');
+            let toId = Game.dragenterELEM.getAttribute('id');
+            
+            if (location == 'column') {
+                var column = Game.tableau.stock[parseInt(toId.substr(3, 4))];
+                if (column.length > 0) {
+                    location = 'card';
+
+                    toId = column[column.length - 1];
+                }
+                
+            }
+
+            if (location == 'card') {
+                const toCardId = parseInt(toId);
+                const toCard = Game.get_card_info(toCardId);
+
+                const fromCard = c;
+
+                if (Game.is_valid_move(fromCard, toCard)) 
+                {
+                    console.log("Moving cards", fromCard, toCardId, toCard)
+                    Game.move_cards(fromCard, toCard);
+                }
+            }
+
+            if (location == 'column' || location == 'freecell' || location == 'foundation') {
+                const toCardId = toId;
+
+                const fromCard = c;
+
+                if (Game.is_valid_move(fromCard, toCardId)) 
+                {
+                    console.log("Moving cards", fromCard, toCardId, false)
+                    Game.move_cards(fromCard, toCardId);
+                }
+
+            }
+		}
+	};
+
+	Game.mouseup = function(e) {
+        // console.log("mouseup", e);
+
+		if (Game.activeCard) {
+			Game.activeCard.el.classList.remove("dragging");
+			Game.activeCard = false;
+		}
+        Game.dragging = false;
+	};
+
+
+
+
 Game.end_game = function(data) {
-    if (data.action === "game_lost")
+    if (data.action === "game_lost") {
         $('#game_over_bar').css('display', 'block');
-    else if (data.action === "game_won")
+    }
+    else if (data.action === "game_won") {
         $('#game_won_bar').css('display', 'block');
+    }
 
     if (data.end_type === "forfeit") {
         $('.forfeit_text').css('display', 'block');
-    } else if (data.end_type === "played") {
+    }
+    else if (data.end_type === "played") {
         $('.played_text').css('display', 'block');
     }
 
@@ -78,14 +293,14 @@ Game.end_game = function(data) {
     // remove the click actions
     Game.render();
 
-    Timer.stop();
     Timer.set_static_time(data.end_time - data.start_time);
+    Timer.stop();
 };
 
 
 Game.music_active = false;
 Game.loop = new Howl({
-    src: ['/ff.wav'],
+    src: ['/ff.mp3', '/ff.wav'],
     loop: true
 })
 
@@ -97,7 +312,6 @@ Game.stop_music = function() {
     Game.loop.stop();
 };
 
-
 Game.set_title = function(data) {
     switch (data.game_mode) {
         case 'singleplayer':
@@ -108,7 +322,6 @@ Game.set_title = function(data) {
             break;
     }
 };
-
 
 
 Game.get_card_info = function(card_id)
@@ -128,6 +341,7 @@ Game.get_card_info = function(card_id)
 
     return {
         id: card_id,
+        el: document.querySelector(`[id='${card_id}']`),
         selector: $('[location=card]#' + card_id),
         name: names[Math.floor((card_id - 1) / 4)] + " of " + suits[(card_id - 1)% 4],
         value: values[Math.floor((card_id - 1)/4)],
@@ -137,12 +351,6 @@ Game.get_card_info = function(card_id)
     };
 
 };
-
-//
-Game.get_card_location = function() {
-
-};
-
 
 // returns an array of the cards that can be moved
 Game.get_movable_cards = function() {
@@ -164,8 +372,6 @@ Game.get_movable_cards = function() {
             continue;
         cards.push(Game.get_card_info(Game.tableau.freecells[i]));
     }
-
-    // cards moved to foundations CANNOT be moved
 
     return cards;
 };
@@ -307,8 +513,8 @@ Game.render = function()
                 .addClass('card')
                 .attr('location', 'card')
                 .attr('id', card.id)
-                .css('top', (25 * ii) + 'px')
-                .html('<img src="' + card.image + '" />')
+                .attr('draggable', true)
+                .css('background-image', `url('${card.image}')`)
                 .appendTo(column);
         }
 
@@ -327,8 +533,8 @@ Game.render = function()
                 .addClass('card')
                 .attr('location', 'card')
                 .attr('id', card.id)
-                .css('position', 'inherit')
-                .html('<img src="' + card.image + '" />')
+                .attr('draggable', true)
+                .css('background-image', `url('${card.image}')`)
                 .appendTo(freecell);
         }
     }
@@ -346,194 +552,13 @@ Game.render = function()
                 .addClass('card')
                 .attr('location', 'card')
                 .attr('id', card.id)
-                .css('position', 'inherit')
-                .html('<img src="' + card.image + '" />')
+                .attr('draggable', false)
+                .css('background-image', `url('${card.image}')`)
                 .appendTo(foundation);
         }
     }
 
 };
-
-// creates a number of actions
-Game.render_actions = function() {
-
-    var cards = Game.get_movable_cards();
-
-    for (var i = 0; i < cards.length; i++) {
-        var card = cards[i];
-
-        $('[location=card]#' + card.id)
-            .on('click', Game.left_click_action)
-            .on('contextmenu', Game.double_click_action)
-            .on('dblclick', Game.double_click_action)
-            .hover(
-                function () {
-                    if (Game.left_click_buffer !== parseInt(this.id.replace(/\D/g,'')))
-                        $(this).addClass('highlight');
-                },
-                function () {
-                    if (Game.left_click_buffer !== parseInt(this.id.replace(/\D/g,'')))
-                        $(this).removeClass('highlight');
-                }
-            )
-
-
-    }
-
-    // make columns clickable, if they are empty
-    for (var i = 0; i < 8; i++)
-    {
-        var count = Game.tableau.stock[i].length;
-        if (count === 0) {
-            $('#col' + i).on('click', Game.left_click_action);
-        } else {
-            $('#col' + i).off('click');
-        }
-    }
-
-    // make freecells clickable, if they are empty
-    for (var i = 0; i < 4; i++)
-    {
-        if (Game.tableau.freecells[i] === null) {
-            $('#free' + i).on('click', Game.left_click_action);
-        } else {
-            $('#free' + i).off('click');
-        }
-    }
-
-    // make foundations clickable
-    for (var i = 0; i < 4; i++)
-    {
-        $('#suit' + i).on('click', Game.left_click_action);
-    }
-
-};
-
-Game.double_click_action = function(event) {
-    if (Game.sending_move)
-    {
-        console.log("Clicked too fast, move not processed");
-        return false;
-    }
-
-    // remove the left click buffer for double clicks to prevent double moves
-    Game.left_click_buffer = null;
-
-    // console.log('double click action');
-
-    var card = Game.get_card_info(parseInt(this.id));
-    var moves = Game.get_valid_moves(card);
-
-    var move = null;
-    for (var i = 0; i < moves.length; i++)
-    {
-        if (moves[i].location === 'foundation')
-        {
-            Game.move_cards(card, 'suit' + moves[i].id);
-            return true;
-        }
-
-    }
-
-    for (var i = 0; i < moves.length; i++)
-    {
-        if (moves[i].location === 'freecell')
-        {
-            Game.move_cards(card, 'free' + moves[i].id);
-            return true;
-        }
-
-    }
-
-    // no double click moves found
-    if (move === null)
-        return false;
-};
-
-Game.right_click_action = function(event) {
-    // console.log('right click action');
-    Game.double_click_action(event);
-    
-    event.preventDefault();
-
-};
-
-Game.left_click_buffer = null;
-Game.left_click_action = function(event) {
-    if (Game.sending_move)
-    {
-        console.log("Clicked too fast, move not processed");
-        return false;
-    }
-
-    // console.log('left click action', this.getAttribute('location'), this.id, Game.left_click_buffer);
-
-    var location = this.getAttribute('location');
-
-    if (location === 'card') {
-
-        var card_id = parseInt(this.id);
-        var card = Game.get_card_info(card_id);
-
-        // if there is no card currently selected, then select it.
-        if (Game.left_click_buffer === null) {
-            Game.left_click_buffer = card.id;
-
-            card.selector.addClass('highlight');
-
-        }
-        // if the card is currently selected, unselect it on click
-        else if (Game.left_click_buffer === card.id) {
-            Game.left_click_buffer = null;
-
-            card.selector.removeClass('highlight');
-
-        }
-
-        // otherwise the player is attempting to make a move
-        else {
-            var moving_card = Game.get_card_info(Game.left_click_buffer);
-
-            if (Game.is_valid_move(moving_card, card)) {
-
-                Game.move_cards(moving_card, card);
-                Game.left_click_buffer = null;
-
-            } else {
-
-                Game.left_click_buffer = null;
-                moving_card.selector.removeClass('highlight');
-
-            }
-
-        }
-
-        return;
-    }
-
-    if (Game.left_click_buffer !== null) {
-
-
-        var moving_card = Game.get_card_info(Game.left_click_buffer);
-
-        // otherwise its a not a card move.
-        if (Game.is_valid_move(moving_card, this.id)) {
-
-            // you can't select an empty column, but you can move a card there
-
-            Game.move_cards(moving_card, this.id);
-            Game.left_click_buffer = null;
-
-        } else {
-
-            Game.left_click_buffer = null;
-            moving_card.selector.removeClass('highlight');
-
-        }
-    }
-};
-
-
 
 Game.move_cards = function (moving_card, to_card) {
     var column;
@@ -560,7 +585,6 @@ Game.move_cards = function (moving_card, to_card) {
     }
 
     Game.render();
-    Game.render_actions();
 
     App.game.send_move(Game.tableau);
 };

@@ -3,7 +3,7 @@ class AccessController < ApplicationController
   before_action :confirm_logged_in, :except => [:login, :register, :attempt_login, :logout]
 
   def options
-    @unlock_golden_wins = 10
+    @unlock_golden_wins = 3
 
     @totals = {}
     @totals["singleplayer_wins"] = 0

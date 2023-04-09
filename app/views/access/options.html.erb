@@ -22,7 +22,7 @@
         <% if @totals["singleplayer_wins"] >= @unlock_golden_wins %>
           <%= radio_button_tag 'options[skin]', 'golden', @user.card_skin == 'golden' %>
         <% else %>
-          <small><i>Unlock at <b>10</b> Singleplayer wins</i></small>
+          <small><i>Unlock at <b><%= @unlock_golden_wins %></b> Singleplayer wins</i></small>
         <% end %>
       </td>
     </tr>

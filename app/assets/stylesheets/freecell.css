@@ -1,6 +1,6 @@
 body {
     background-color: #04B404;
-    /*background-color: #008200;*/
+
     font-family: Verdana, Arial, sans-serif;
     font-size: 16px;
     margin: 0;
@@ -8,24 +8,33 @@ body {
     width: 720px;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    margin:0px;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0px;
     margin-bottom: 12px;
 }
+
 a {
     color: #0531a1;
 }
+
 a:hover {
     color: #750026;
 }
 
 
-input, textarea, select  {
+input,
+textarea,
+select {
     font-size: 14px;
     background: #a5d1c9;
     border: 1px solid #000;
     color: #000;
-    font-weight:bold;
+    font-weight: bold;
 }
 
 input[type=submit] {
@@ -34,13 +43,18 @@ input[type=submit] {
 
 .big_play_button {
     padding: 8px 12px;
-    font-size:16px;
+    font-size: 16px;
     border-radius: 5px;
     margin: 0 auto;
 }
 
+a.game-action {
+    color: #EEE;
+    font-size: 16px;
+    text-decoration: none;
+}
+
 .header {
-    /*border: 1px solid white;*/
     padding: 0;
     margin: 0;
 }
@@ -48,7 +62,6 @@ input[type=submit] {
 .notice {
     background: hsla(165, 40%, 48%, 0.92);
     border: 2px solid black;
-    width: 100%;
     font-size: 20px;
     text-align: left;
     padding: 5px 5px 5px 30px;
@@ -65,16 +78,16 @@ table {
 }
 
 #table {
+    user-select: none;
     background-color: #04B404;
     width: 720px;
-    /*width: 673px; #minimum needed*/
     height: 600px;
-
     padding: 10px;
 }
 
 
-#game_info, #status_bar {
+#game_info,
+#status_bar {
     width: 720px;
     background-color: white;
     height: 24px;
@@ -89,13 +102,15 @@ table {
 }
 
 #status_bar {
-    background-color:darkred;
-    text-align:center;
+    background-color: darkred;
+    text-align: center;
     color: white;
     border-bottom: 0;
 }
 
-#game_over_bar, #game_won_bar, #disconnected_bar {
+#game_over_bar,
+#game_won_bar,
+#disconnected_bar {
     display: none;
     width: 400px;
     background-color: #b4a604;
@@ -124,7 +139,7 @@ table {
 }
 
 .hidden_text {
-    display:none;
+    display: none;
 }
 
 
@@ -134,7 +149,7 @@ table {
 
 #game_loading {
     display: none;
-    text-align:center;
+    text-align: center;
     width: 99%
 }
 
@@ -164,9 +179,10 @@ table {
 }
 
 .clock_t {
-    margin:4px;
-    float:left;
+    margin: 4px;
+    float: left;
 }
+
 .flag_t {
     vertical-align: middle;
     filter: invert(0.9);
@@ -174,7 +190,7 @@ table {
 
 
 #footer {
-    text-align:center;
+    text-align: center;
     color: black;
     margin: 0 auto;
     border-top: 1px dotted black;
@@ -189,12 +205,7 @@ table {
     top: 0px;
     left: 0px;
     height: 96px;
-
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
+    width: 72px;
     user-select: none;
 }
 
@@ -203,13 +214,19 @@ table {
     float: left;
     margin: 50px 5px 0px 5px;
     width: 72px;
+    height: 450px;
+}
+
+.column:before {
+    content: "";
+    width: 72px;
     height: 96px;
+    margin: -1px;
+    display: block;
     border-style: solid;
     border-width: 1px 1px 0px 1px;
     border-color: #58FA58;
     border-radius: 3px 3px 0px 0px;
-    -moz-border-radius: 3px 3px 0px 0px;
-    -webkit-border-radius: 3px 3px 0px 0px;
 }
 
 .free {
@@ -220,7 +237,9 @@ table {
     float: right;
 }
 
-.free, .suit {
+.free,
+.suit {
+    position: relative;
     width: 72px;
     height: 96px;
     border-style: solid;
@@ -228,30 +247,17 @@ table {
     border-color: #58FA58;
     margin: 3px;
     border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
 }
 
-.highlight {
-    -moz-box-shadow: 0px 0px 8px #f00;
-    -webkit-box-shadow: 0px 0px 8px #f00;
+.over:not(.column),
+.column.over .card:last-child,
+.column.over:not(:has(.card)):before {
     box-shadow: 0px 0px 8px #f00;
 }
 
-.highlight-clicked {
-    -moz-box-shadow: 0px 0px 8px #0200ff;
-    -webkit-box-shadow: 0px 0px 8px #0200ff;
-    box-shadow: 0px 0px 8px #0200ff;
-}
-
-
-
-
-
-
 #wait_timer {
     font-size: 24px;
-    font-weight:bold;
+    font-weight: bold;
 }
 
 
@@ -277,6 +283,7 @@ table {
     font-size: 0.7em;
     border-bottom: 3px solid black;
 }
+
 .lobby_table th {
     padding: 3px;
     padding-left: 5px;
@@ -284,4 +291,141 @@ table {
 
 .lobby_table td {
     padding: 3px;
+}
+
+
+
+
+.card.dragging {
+    z-index: 1000 !important;
+    box-shadow: 0 0 20px -5px #000;
+}
+
+
+.free>.card,
+.column>.card {
+    cursor: pointer;
+}
+
+
+
+
+.column .card:nth-child(1),
+.column .ghost:nth-child(1) {
+    top: 0px;
+    z-index: 11;
+}
+
+.column .card:nth-child(2),
+.column .ghost:nth-child(2) {
+    top: 25px;
+    z-index: 12;
+}
+
+.column .card:nth-child(3),
+.column .ghost:nth-child(3) {
+    top: 50px;
+    z-index: 13;
+}
+
+.column .card:nth-child(4),
+.column .ghost:nth-child(4) {
+    top: 75px;
+    z-index: 14;
+}
+
+.column .card:nth-child(5),
+.column .ghost:nth-child(5) {
+    top: 100px;
+    z-index: 15;
+}
+
+.column .card:nth-child(6),
+.column .ghost:nth-child(6) {
+    top: 125px;
+    z-index: 16;
+}
+
+.column .card:nth-child(7),
+.column .ghost:nth-child(7) {
+    top: 150px;
+    z-index: 17;
+}
+
+.column .card:nth-child(8),
+.column .ghost:nth-child(8) {
+    top: 175px;
+    z-index: 18;
+}
+
+.column .card:nth-child(9),
+.column .ghost:nth-child(9) {
+    top: 200px;
+    z-index: 19;
+}
+
+.column .card:nth-child(10),
+.column .ghost:nth-child(10) {
+    top: 225px;
+    z-index: 20;
+}
+
+.column .card:nth-child(11),
+.column .ghost:nth-child(11) {
+    top: 250px;
+    z-index: 21;
+}
+
+.column .card:nth-child(12),
+.column .ghost:nth-child(12) {
+    top: 275px;
+    z-index: 22;
+}
+
+.column .card:nth-child(13),
+.column .ghost:nth-child(13) {
+    top: 300px;
+    z-index: 23;
+}
+
+.column .card:nth-child(14),
+.column .ghost:nth-child(14) {
+    top: 325px;
+    z-index: 24;
+}
+
+.column .card:nth-child(15),
+.column .ghost:nth-child(15) {
+    top: 350px;
+    z-index: 25;
+}
+
+.column .card:nth-child(16),
+.column .ghost:nth-child(16) {
+    top: 375px;
+    z-index: 26;
+}
+
+.column .card:nth-child(17),
+.column .ghost:nth-child(17) {
+    top: 400px;
+    z-index: 27;
+}
+
+.column .card:nth-child(18),
+.column .ghost:nth-child(18) {
+    top: 425px;
+    z-index: 28;
+}
+
+.column .card:nth-child(19),
+.column .ghost:nth-child(19) {
+    top: 450px;
+    z-index: 29;
+}
+
+.column .card:nth-child(20),
+.column .ghost:nth-child(20) {
+    top: 475px;
+    z-index: 30;
 }

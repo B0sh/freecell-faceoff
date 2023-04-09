@@ -10,39 +10,46 @@
     return App.game = App.cable.subscriptions.create("GameChannel", {
       foundMatch: false,
       connected: function() {
-        console.log("connected");
-        console.log(App.game.foundMatch);
+        console.log("connected to GameChannel cable");
+
         $('#disconnected_bar').css('display', 'none');
         if (!App.game.foundMatch) {
           $('#game_loading').css('display', 'block');
           return Timer.start($('#wait_timer'));
         }
       },
+
+      // Called when the subscription has been terminated by the server
       disconnected: function() {
-        // Called when the subscription has been terminated by the server
-        console.log("disconnected");
+        console.log("disconnected from GameChannel cable");
         return $('#disconnected_bar').css('display', 'block');
       },
+
+      // Called when there's incoming data on the websocket for this channel
       received: function(data) {
-        // Called when there's incoming data on the websocket for this channel
-        console.log(data);
+        console.log("recieved: ", data);
+
         switch (data.action) {
           case "game_queueing":
             return console.log("queue");
+
           case "game_move":
             if (!App.game.foundMatch) {
               $('#game_loading').css('display', 'none');
               $('#game_window').css('display', 'block');
               App.game.foundMatch = true;
-              Timer.stop();
+              // Timer.stop();
               App.game.enable_sound();
               console.log("start");
             }
+
             Game.sending_move = false;
             return Game.init(data);
+
           case "game_lost":
             Game.end_game(data);
             return alert("Game Over");
+
           case "game_won":
             Game.end_game(data);
             return alert("Game Won");
@@ -50,9 +57,12 @@
       },
       send_move: function(tableau) {
         Game.sending_move = true;
+        // setTimeout(() => {
+
         return this.perform("move", {
           tableau: tableau
         });
+        // }, 1000)
       },
       send_forfeit: function() {
         return this.perform("forfeit", {
