@@ -16,7 +16,7 @@ jobs:
         uses: burnett01/rsync-deployments@5.2.1
         with:
           switches: -avzr --exclude=.git --exclude=.github --exclude=.env
-          path: /
+          path: .
           remote_path: ${{ secrets.DEPLOY_PATH }}
           remote_host: ${{ secrets.DEPLOY_HOST }}
           remote_user: ${{ secrets.DEPLOY_USER }}
