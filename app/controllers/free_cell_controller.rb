@@ -62,6 +62,15 @@ class FreeCellController < ApplicationController
     redirect_to :controller => 'welcome', :action => 'index'
   end
 
+  def stats
+    @total_matches = Match.count
+    @total_singleplayer = Match.where("game_mode=?", "singleplayer").count
+    @total_timeattack = Match.where("game_mode=?", "time-attack").count
+    @total_users = User.count
+
+    @matches = Match.where("end_time IS NOT NULL").order(end_time: :desc)
+  end
+
   private
 
   def confirm_logged_in
