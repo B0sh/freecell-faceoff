@@ -48,11 +48,11 @@
 
           case "game_lost":
             Game.end_game(data);
-            return alert("Game Over");
+            return;
 
           case "game_won":
             Game.end_game(data);
-            return alert("Game Won");
+            return;
         }
       },
       send_move: function(tableau) {
@@ -65,9 +65,11 @@
         // }, 1000)
       },
       send_forfeit: function() {
-        return this.perform("forfeit", {
-          im: 'done'
-        });
+        if (Game.turn_number > 0) {
+          return this.perform("forfeit", {
+            im: 'done'
+          });
+        }
       },
       enable_sound: function() {
         $('#button_sound_off').css('display', 'block');

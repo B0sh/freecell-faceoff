@@ -34,8 +34,6 @@ Timer.stop = function() {
         clearInterval(Timer.intervals[i]);
     }
 
-    console.log("stopped timer")
-
     Timer.started = false;
     Timer.selector = null;
 };

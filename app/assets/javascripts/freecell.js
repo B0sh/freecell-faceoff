@@ -30,28 +30,15 @@ Game.tableau = {
 };
 
 Game.init = function (data) {
-    console.log("INIT")
+    console.log("Init turn #", data.turn_number)
 
     Game.tableau = data.tableau;
     Game.player = data.player;
+    Game.turn_number = data.turn_number;
 
     Game.set_title(data);
     $('.opponent_name').html(data.opponent_name);
     $('#turn_number').html(data.turn_number);
-
-    if (data.game_mode === "singleplayer") {
-        Game.is_your_turn = true;
-    } else {
-        Game.is_your_turn = data.turn === Game.player;
-    }
-
-    if (Game.is_your_turn) {
-        $('.timer_area').addClass('your_turn');
-        $('.timer_area').removeClass('their_turn');
-    } else {
-        $('.timer_area').removeClass('your_turn');
-        $('.timer_area').addClass('their_turn');
-    }
 
     Game.render();
     Timer.stop();
@@ -82,39 +69,12 @@ Game.initMouseEvents = function () {
 };
 
     Game.contextmenu = function(e) {
-
         e.preventDefault();
-        // if (Game.sending_move)
-        // {
-        //     alert("Clicked too fast, move not processed");
-        //     return false;
-        // }
 
 		const targetCard = e.target.closest(".card");
 
 		if (targetCard && targetCard.id) {
-            var card = Game.get_card_info(parseInt(targetCard.id));
-            var moves = Game.get_valid_moves(card);
-
-            for (var i = 0; i < moves.length; i++)
-            {
-                if (moves[i].location === 'foundation')
-                {
-                    Game.move_cards(card, 'suit' + moves[i].id);
-                    return true;
-                }
-
-            }
-
-            for (var i = 0; i < moves.length; i++)
-            {
-                if (moves[i].location === 'freecell')
-                {
-                    Game.move_cards(card, 'free' + moves[i].id);
-                    return true;
-                }
-
-            }
+            Game.auto_move(parseInt(targetCard.id));
         }
     }
  
@@ -274,10 +234,21 @@ Game.initMouseEvents = function () {
 
 
 Game.end_game = function(data) {
+    console.log(data);
+    Timer.set_static_time(data.end_time - data.start_time);
+    Timer.stop();
+
     if (data.action === "game_lost") {
+        if (data.end_type == 'forfeit') {
+            Game.play_sfx('/ding04.mp3');
+        }
+        else {
+            Game.play_sfx('/shock3.mp3');
+        }
         $('#game_over_bar').css('display', 'block');
     }
     else if (data.action === "game_won") {
+        Game.play_sfx('/ice-pen.mp3');
         $('#game_won_bar').css('display', 'block');
     }
 
@@ -292,9 +263,6 @@ Game.end_game = function(data) {
 
     // remove the click actions
     Game.render();
-
-    Timer.set_static_time(data.end_time - data.start_time);
-    Timer.stop();
 };
 
 
@@ -311,6 +279,20 @@ Game.start_music = function() {
 Game.stop_music = function() {
     Game.loop.stop();
 };
+
+Game.play_sfx = function (url) {
+    Game.loop.fade(1, 0, 300);
+    setTimeout(() => {
+        var sfx = new Howl({
+            src: [url],
+            autoplay: true,
+            onend: function () {
+                Game.loop.fade(0, 1, 500);
+            }
+        });
+    }, 100);
+
+}
 
 Game.set_title = function(data) {
     switch (data.game_mode) {
@@ -384,26 +366,35 @@ Game.get_valid_moves = function (card)
 
     var moves = [];
 
+    // If the card is not at the bottom of a column or freecell then you can't move it in the first place
+    const isBottomOfColumn = !!Game.tableau.stock.find((x) => x[x.length - 1] == card.id);
+    const isInFreeCells = !!Game.tableau.freecells.find((x) => x == card.id);
+    if (!isBottomOfColumn && !isInFreeCells) {
+        return [];
+    }
+
     // stocks
     for (var i = 0; i < 8; i++)
     {
         var count = Game.tableau.stock[i].length;
 
         // if there is no cards in the column then its a valid move
-        if (count === 0)
+        if (count === 0) {
             moves.push({
                 location: 'stock',
                 id: i
             });
+        }
         else {
             var bottom_card = Game.get_card_info(Game.tableau.stock[i][count - 1]);
 
             // if the bottom card is 1 above and different suit its a valid move
-            if ((bottom_card.value - 1 === card.value) && (bottom_card.color !== card.color))
+            if ((bottom_card.value - 1 === card.value) && (bottom_card.color !== card.color)) {
                 moves.push({
                     location: 'card',
                     id: bottom_card.id
                 });
+            }
         }
 
     }
@@ -490,14 +481,6 @@ Game.render = function()
 
     var stock, column, card, freecell, foundation, i;
 
-    if (Game.is_your_turn) {
-        $('#game_turn_theirs').css('display', 'none');
-        $('#game_turn_yours').css('display', 'block');
-    } else {
-        $('#game_turn_theirs').css('display', 'block');
-        $('#game_turn_yours').css('display', 'none');
-    }
-
     // render the columns
     for (i = 0; i < 8; i++) {
         stock = Game.tableau.stock[i];
@@ -558,6 +541,37 @@ Game.render = function()
         }
     }
 
+};
+
+Game.auto_move = function (card_id) {
+    var card = Game.get_card_info(card_id);
+    var moves = Game.get_valid_moves(card);
+
+    for (var i = 0; i < moves.length; i++)
+    {
+        if (moves[i].location === 'foundation')
+        {
+            Game.move_cards(card, 'suit' + moves[i].id);
+            return true;
+        }
+
+    }
+
+    // Don't auto move freecells around inside of the freecells
+    const isInFreeCells = !!Game.tableau.freecells.find((x) => x == card.id);
+    if (isInFreeCells) {
+        return false;
+    }
+
+    for (var i = 0; i < moves.length; i++)
+    {
+        if (moves[i].location === 'freecell')
+        {
+            Game.move_cards(card, 'free' + moves[i].id);
+            return true;
+        }
+
+    }
 };
 
 Game.move_cards = function (moving_card, to_card) {

@@ -56,6 +56,7 @@ class Singleplayer < Game
                                  game_mode: @match.game_mode,
                                  start_time: @match.start_time.to_f,
                                  end_time: @match.end_time.to_f,
+                                 end_type: @match.end_type,
                                  turn: @game['turn'],
                                  turn_number: @game['turn_number'],
                                  tableau: @game['tableau']
