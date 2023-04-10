@@ -1,6 +1,8 @@
 
 
-After building docker container for the first time build db in ruby
+After building docker container for the first time build db in ruby.
+
+Note: This command will reset the database if there is any data there currently
 
 `docker-compose exec app bundle exec rake db:setup db:migrate`
 

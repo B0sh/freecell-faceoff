@@ -1,14 +1,12 @@
 Rails.application.configure do
-  # https://medium.com/@JeremyVe/rails-5-actioncable-and-heroku-b10880dafb58
-  config.web_socket_server_url = "wss://freecell-fuckoff.herokuapp.com/"
-  config.action_cable.allowed_request_origins = ['https://freecell-fuckoff.herokuapp.com', 'http://freecell-fuckoff.herokuapp.com', 'https://waldens.world', 'http://waldens.world']
+  config.action_cable.allowed_request_origins = [ 'https://waldens.world' ]
 
   # https://www.codeschool.com/discuss/t/rails-api-access-control-allow-origin-error/7439/2
-  config.action_dispatch.default_headers.merge!({
-    'Access-Control-Allow-Origin' => '*',
-    'Access-Control-Request-Method' => '*',
-    'X-Frame-Options' => 'ALLOW-FROM https://waldens.world/'
-  })
+  # config.action_dispatch.default_headers.merge!({
+  #   'Access-Control-Allow-Origin' => '*',
+  #   'Access-Control-Request-Method' => '*',
+  #   'X-Frame-Options' => 'ALLOW-FROM https://waldens.world/'
+  # })
 
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -35,11 +33,14 @@ Rails.application.configure do
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = :uglifier
+  config.assets.js_compressor = Uglifier.new(harmony: true)
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = false
+  # config.assets.compile = false
+
+  #! B0sh: Don't care about precompiling for my stupid game, just get it working
+  config.assets.compile = true
 
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
