@@ -68,7 +68,7 @@ class FreeCellController < ApplicationController
     @total_timeattack = Match.where("game_mode=?", "time-attack").count
     @total_users = User.count
 
-    @matches = Match.where("end_time IS NOT NULL").order(end_time: :desc)
+    @matches = Match.where("end_time IS NOT NULL").order(end_time: :desc).limit(10)
   end
 
   private
