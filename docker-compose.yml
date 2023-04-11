@@ -1,15 +1,16 @@
 version: '3.4'
 
 services:
-  app: 
+  freecellfaceoff: 
+    container_name: freecellfaceoff
     build:
       context: .
       dockerfile: Dockerfile
+    ports: 
+      - 3000:3000
     depends_on:     
       - database
       - redis
-    ports: 
-      - "3000:3000"
     volumes:
       - .:/app
       - gem_cache:/usr/local/bundle/gems
@@ -17,17 +18,28 @@ services:
     environment:
       RAILS_ENV: ${RAILS_ENV}
       REDIS_URL: redis://redis:6379/1
+    networks:
+      - waldensworld
 
   database:
     image: postgres:12.1
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - waldensworld
 
   redis:
     image: redis:4
+    networks:
+      - waldensworld
 
 volumes:
   gem_cache:
   db_data:
   node_modules:
+
+networks:
+  waldensworld:
+    name: waldensworld
+    external: true
